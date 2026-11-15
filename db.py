@@ -1,7 +1,20 @@
 import os
+import sys
 import pymysql
 import pymysql.cursors
-from fiance.config import Config
+
+# Ensure current directory is in sys.path for direct execution
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+if _current_dir not in sys.path:
+    sys.path.insert(0, _current_dir)
+
+try:
+    from config import Config
+except ImportError:
+    try:
+        from .config import Config
+    except ImportError:
+        from fiance.config import Config
 
 def get_server_connection():
     """Connects to MySQL server (without specific DB) to allow DB creation."""

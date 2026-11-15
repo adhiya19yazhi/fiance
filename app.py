@@ -3,9 +3,22 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from fiance.config import Config
-from fiance.db import init_db, query_db, execute_db, check_db_health
-from fiance.seed import seed_data
+import os
+import sys
+
+# Ensure current directory is in sys.path for direct script execution
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+if _current_dir not in sys.path:
+    sys.path.insert(0, _current_dir)
+
+try:
+    from config import Config
+    from db import init_db, query_db, execute_db, check_db_health
+    from seed import seed_data
+except ImportError:
+    from .config import Config
+    from .db import init_db, query_db, execute_db, check_db_health
+    from .seed import seed_data
 
 app = Flask(__name__)
 CORS(app)

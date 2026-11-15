@@ -1,4 +1,18 @@
-from fiance.db import get_db_connection, query_db
+import os
+import sys
+
+# Ensure current directory is in sys.path for direct execution
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+if _current_dir not in sys.path:
+    sys.path.insert(0, _current_dir)
+
+try:
+    from db import get_db_connection, query_db
+except ImportError:
+    try:
+        from .db import get_db_connection, query_db
+    except ImportError:
+        from fiance.db import get_db_connection, query_db
 
 def seed_data():
     """Seeds initial sample records if tables are empty."""
@@ -91,6 +105,12 @@ def seed_data():
         return False
 
 if __name__ == '__main__':
-    from fiance.db import init_db
+    try:
+        from db import init_db
+    except ImportError:
+        try:
+            from .db import init_db
+        except ImportError:
+            from fiance.db import init_db
     init_db()
     seed_data()
